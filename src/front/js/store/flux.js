@@ -1,51 +1,66 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			auth: false,
+			token: null
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
+			login: async (email, password) => {
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + "api/login", {
+						method: "POST",
+						body: JSON.stringify({ email: email, password: password }),
+						headers: {
+							"Content-Type": "application/json"
+						}
+					})
+					if (!resp.ok) throw Error("There was a problem in the login request")
 
-			getMessage: async () => {
-				try{
-					// fetching data from the backend
-					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
+					if (resp.status === 401) {
+						throw ("Invalid credentials")
+					}
+					else if (resp.status === 400) {
+						throw ("Invalid email or password format")
+					}
 					const data = await resp.json()
-					setStore({ message: data.message })
-					// don't forget to return something, that is how the async resolves
+					console.log(data);
+					setStore({ auth: true })
+					localStorage.setItem("jwt-token", data.token);
 					return data;
-				}catch(error){
+				} catch (error) {
 					console.log("Error loading message from backend", error)
 				}
 			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
+			setToken: () => {
+				setStore({ token: localStorage.getItem("jwt-token") })
+			},
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
+			logout: () => {
+				localStorage.removeItem('jwt_token');
+				setStore({
+					token: null,
+					auth: false,
+			
 				});
+				console.log("Usuario desconectado");
+			},
 
-				//reset the global store
-				setStore({ demo: demo });
+			register: async(email,password) =>{
+				try {
+					const resp = await fetch(process.env.BACKEND_URL+ "api/register", {
+						method: "POST",
+						body: JSON.stringify({ email: email, password:password }),
+						headers: {
+							"Content-Type": "application/json"
+						}
+					})
+					const data = await resp.json()
+					return data;
+
+				}
+				catch (error) {
+					console.log("Error loading message from backend", error)
+				}
 			}
 		}
 	};

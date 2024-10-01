@@ -35,6 +35,8 @@ Thumbs.db
 *.sublime-project
 *.sublime-workspace
 *.komodoproject
+migrations/
+gitignore
 
 # ignore log files and databases
 *.log

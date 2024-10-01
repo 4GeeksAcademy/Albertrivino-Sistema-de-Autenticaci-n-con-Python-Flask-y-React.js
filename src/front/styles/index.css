@@ -1,3 +1,82 @@
-/* 
-    General Styles used on every website (Don't Repeat Yourself)
-*/
+.light-speed-background {
+    position: relative;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    background: black;
+    perspective: 1000px;
+}
+
+.stars {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: transparent;
+    overflow: hidden;
+    transform: translateZ(-1000px) scale(2);
+    animation: zoom 2s infinite linear;
+    z-index: -1;
+}
+
+.star {
+    background: rgb(255, 255, 255);
+    position: absolute;
+    animation: travel 10s infinite linear;
+    border-radius: 50%;
+}
+
+@keyframes zoom {
+    0% {
+        transform: translateZ(-1000px) scale(2);
+    }
+
+    100% {
+        transform: translateZ(0px) scale(1);
+    }
+}
+
+@keyframes travel {
+    0% {
+        opacity: 0;
+        transform: translateZ(0px);
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateZ(1000px);
+    }
+}
+
+.form-control {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #913737;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-radius: 0;
+    color: white;
+  }
+  
+  html,
+body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+}
